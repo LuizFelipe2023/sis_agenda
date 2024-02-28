@@ -41,7 +41,7 @@
                             <button type="submit" class="btn btn-primary btn-block">Entrar</button>
                         </form>
                         <hr>
-                        <p class="text-center">Esqueceu sua senha? <a href="{{ route('forgot_password') }}">Redefinir senha</a></p>
+                        <p class="text-center">Esqueceu sua senha? <a href="{{ route('forgot') }}">Redefinir senha</a></p>
                         <p class="text-center">Ainda não tem uma conta? <a href="{{ route('home') }}">Cadastre-se aqui</a></p>
                     </div>
                 </div>
