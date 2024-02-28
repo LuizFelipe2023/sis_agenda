@@ -1,0 +1,19 @@
+body {
+    padding-top: 70px; 
+}
+.container {
+    max-width: 800px;
+}
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+table {
+    width: 100%;
+}
+
+th {
+    text-align: center;
+}
