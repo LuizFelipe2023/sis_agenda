@@ -22,8 +22,12 @@ Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'login_submit'])->name('login_submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/register-submit', [AuthController::class, 'register_submit'])->name('register_submit');
-Route::post('/forgot-password', [AuthController::class, 'forgot_password'])->name('forgot_password');
-Route::post('/reset-password', [AuthController::class, 'reset_password'])->name('reset_password');
+Route::get('/forgot',[AuthController::class,'forgot'])->name('forgot');
+Route::post('/forgot-password', [AuthController::class, 'forgot_password'])->name('forgot-password');
+Route::get('/reset',[AuthController::class,'reset'])->name('reset');
+Route::post('/reset-password', [AuthController::class, 'reset_password'])->name('reset-password');
+
+
 Route::get('/dashboard', [AgendamentoController::class, 'dashboard'])->name('dashboard');
 Route::get('/create', [AgendamentoController::class, 'create'])->name('create');
 Route::post('/agendamento_submit', [AgendamentoController::class, 'agendamento_submit'])->name('agendamento-submit');

@@ -74,7 +74,9 @@ class AuthController extends Controller
         return redirect('login');
     }
 
-
+    public function forgot(){
+           return view('forgot');
+    }
     public function forgot_password(Request $request)
     {
         $request->validate([
@@ -88,6 +90,9 @@ class AuthController extends Controller
         return $status === Password::RESET_LINK_SENT
             ? back()->with(['status' => __($status)])
             : back()->withErrors(['email' => __($status)]);
+    }
+    public function reset(){
+           return view('reset');
     }
     public function reset_password(Request $request)
     {
