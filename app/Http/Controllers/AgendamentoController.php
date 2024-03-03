@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Agendamento;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Carbon;
 use App\Models\User;
 
 class AgendamentoController extends Controller
@@ -16,27 +14,17 @@ class AgendamentoController extends Controller
         $agendamentos = Agendamento::with('user')->get();
         return view('dashboard', compact('agendamentos'));
     }
+
     public function create()
     {
         return view('create');
     }
 
-
     public function agendamento_submit(Request $request)
     {
-        $userId = Auth::id();
-
         $request->validate([
-            'user_id' => 'required|exists:users,id',
             'date' => 'required|date',
             'time' => 'required|date_format:H:i'
-        ], [
-            'user_id.required' => 'O ID do usuário é obrigatório.',
-            'user_id.exists' => 'O ID do usuário fornecido não existe.',
-            'date.required' => 'A data é obrigatória.',
-            'date.date' => 'A data deve estar em um formato válido.',
-            'time.required' => 'A hora é obrigatória.',
-            'time.date_format' => 'A hora deve estar em um formato válido (HH:MM).',
         ]);
 
         $existingAgendamento = Agendamento::where('date', $request->date)
@@ -46,68 +34,57 @@ class AgendamentoController extends Controller
         if ($existingAgendamento) {
             return back()->withErrors(['time' => 'Já existe um agendamento para esta data e hora.']);
         }
-        $user = User::findOrFail($userId);
 
-        Agendamento::create([
-            'user_id' => $userId,
+        $user = Auth::user();
+
+        $agendamento = new Agendamento([
+            'user_id' => $user->id,
             'name' => $user->name,
             'date' => $request->date,
             'time' => $request->time
         ]);
+
+        $agendamento->save();
 
         return redirect()->route('dashboard')->withSuccess('Agendamento criado com sucesso');
     }
-    public function edit($id){
-        $agendamento = Agendamento::find($id);
-        return view('edit', ['agendamento' => $agendamento]);
+
+    public function edit($id)
+    {
+        $agendamento = Agendamento::findOrFail($id);
+
+        return view('edit', compact('agendamento'));
     }
-    public function edit_submit(Request $request, $id){
-        $agendamento = Agendamento::find($id);
-        
-        if(!$agendamento){
-            return redirect()->back()->with('errors','Não foi encontrado nenhum agendamento!');
-        }
-        
-        $userId = Auth::id();
-        $user = User::find($userId);
-        
-        if(!$user){
-            return redirect()->back()->with('errors','Usuário não encontrado.');
-        }
-        
+
+    public function edit_submit(Request $request, $id)
+    {
+        $agendamento = Agendamento::findOrFail($id);
+
         $request->validate([
             'date' => 'required|date',
             'time' => 'required|date_format:H:i'
-        ], [
-            'date.required' => 'O campo data é obrigatório.',
-            'date.date' => 'O campo data deve ser uma data válida.',
-            'time.required' => 'O campo hora é obrigatório.',
-            'time.date_format' => 'O campo hora deve estar no formato H:i.'
         ]);
-    
-        $arrayData = [
-            'user_id' => $userId,
-            'name' => $user->name,
+
+        $user = Auth::user();
+
+        $agendamento->update([
             'date' => $request->date,
             'time' => $request->time
-        ];
-        $agendamento->update($arrayData);
-    
-        return redirect()->route('dashboard')->with('success','Agendamento atualizado com sucesso');
+        ]);
+
+        return redirect()->route('dashboard')->withSuccess('Agendamento atualizado com sucesso');
     }
-    
-    public function delete($id) {
-        $userId = Auth::id();
-        $agendamento = Agendamento::find($id);
-        if(!$agendamento) {
-            return redirect()->back()->withErrors(['error' => 'Agendamento não encontrado']);
+
+    public function delete($id)
+    {
+        $agendamento = Agendamento::findOrFail($id);
+
+        if ($agendamento->user_id !== Auth::id()) {
+            return redirect()->back()->withErrors(['error' => 'Você não tem permissão para excluir este agendamento.']);
         }
-        $user = User::find($userId);
-        if(!$user){
-            return redirect()->back()-with('errors','Usuario não encontrado');
-        }
+
         $agendamento->delete();
+
         return redirect()->route('dashboard')->withSuccess('Agendamento excluído com sucesso');
     }
-    
 }
