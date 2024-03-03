@@ -72,7 +72,6 @@ class AgendamentoController extends Controller
         $user = User::find($userId);
         
         if(!$user){
-            // Aqui você pode querer registrar o evento de erro em um log, por exemplo
             return redirect()->back()->with('errors','Usuário não encontrado.');
         }
         
@@ -98,12 +97,14 @@ class AgendamentoController extends Controller
     }
     
     public function delete($id) {
+        $userId = Auth::id();
         $agendamento = Agendamento::find($id);
         if(!$agendamento) {
             return redirect()->back()->withErrors(['error' => 'Agendamento não encontrado']);
         }
-        if($agendamento->user_id != Auth::id()) {
-            return back()->withErrors(['error' => 'Você não tem permissão para excluir este agendamento.']);
+        $user = User::find($userId);
+        if(!$user){
+            return redirect()->back()-with('errors','Usuario não encontrado');
         }
         $agendamento->delete();
         return redirect()->route('dashboard')->withSuccess('Agendamento excluído com sucesso');

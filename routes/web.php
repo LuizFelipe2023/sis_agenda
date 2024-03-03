@@ -20,7 +20,7 @@ Route::get('/', function () {
 Route::get('/', [AuthController::class, 'home'])->name('home');
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::post('/login-submit', [AuthController::class, 'login_submit'])->name('login_submit');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
 Route::post('/register-submit', [AuthController::class, 'register_submit'])->name('register_submit');
 Route::get('/forgot', [AuthController::class, 'forgot'])->name('forgot');
 Route::post('/forgot-password', [AuthController::class, 'forgot_password'])->name('forgot-password');
