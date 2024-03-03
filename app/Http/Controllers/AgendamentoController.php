@@ -65,8 +65,6 @@ class AgendamentoController extends Controller
             'time' => 'required|date_format:H:i'
         ]);
 
-        $user = Auth::user();
-
         $agendamento->update([
             'date' => $request->date,
             'time' => $request->time
@@ -74,6 +72,7 @@ class AgendamentoController extends Controller
 
         return redirect()->route('dashboard')->withSuccess('Agendamento atualizado com sucesso');
     }
+
 
     public function delete($id)
     {
