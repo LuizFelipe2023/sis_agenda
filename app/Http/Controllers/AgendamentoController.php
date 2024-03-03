@@ -62,23 +62,25 @@ class AgendamentoController extends Controller
         return view('edit', ['agendamento' => $agendamento]);
     }
     public function edit_submit(Request $request, $id){
-        $request->validate([
-            'date' => 'required|date',
-            'time' => 'required|date_format:H:i'
-        ]);
-        $agendamento = Agendamento::find($id);
-        if(!$agendamento){
-            return redirect()->back()->withErrors(['error'=>'Agendamento não encontrado']);
-        }
-        if ($agendamento->user_id != Auth::id()) {
-            return back()->withErrors(['error' => 'Você não tem permissão para editar este agendamento.']);
-        }
-        $array = [
-            'date' => $request->date,
-            'time' => $request->time
-        ];
-        $agendamento->update($array);
-        return redirect()->route('dashboard')->withSuccess('Agendamento atualizado com sucesso');
+            $agendamento = Agendamento::find($id);
+            if(!$agendamento){
+                return redirect()->back()->with('errors','Não foi encontrado nenhum agendamento!');
+            }
+            $userId = Auth::id();
+            $validatedData = $request->validate([
+                'date' => 'required|date',
+                'time' => 'required|date_format:H:i'
+            ]);
+            if(!$validatedData){
+                return redirect()->back()->with('errors','Preencha os campos corretamente!');
+            }
+            $arrayData =[
+                'user_id' => $userId,
+                'date' => $request->date,
+                'time' => $request->time
+            ];
+            $agendamento->update($arrayData);
+            return redirect()->route('dashboard')->with('success','Agendamento atualizado com sucesso');
     
     }
     public function delete($id) {

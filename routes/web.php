@@ -32,5 +32,5 @@ Route::get('/dashboard', [AgendamentoController::class, 'dashboard'])->name('das
 Route::get('/create', [AgendamentoController::class, 'create'])->name('create');
 Route::post('/agendamento_submit', [AgendamentoController::class, 'agendamento_submit'])->name('agendamento-submit');
 Route::get('/edit/{id}', [AgendamentoController::class, 'edit'])->name('edit');
-Route::post('/edit_submit',[AgendamentoController::class,'edit_submit'])->name('edit-submit');
+Route::post('/edit_submit/{id}',[AgendamentoController::class,'edit_submit'])->name('edit-submit');
 Route::delete('/delete/{id}', [AgendamentoController::class, 'delete'])->name('delete');
