@@ -62,27 +62,35 @@ class AgendamentoController extends Controller
         return view('edit', ['agendamento' => $agendamento]);
     }
     public function edit_submit(Request $request, $id){
-            $agendamento = Agendamento::find($id);
-            if(!$agendamento){
-                return redirect()->back()->with('errors','Não foi encontrado nenhum agendamento!');
-            }
-            $userId = Auth::id();
-            $validatedData = $request->validate([
-                'date' => 'required|date',
-                'time' => 'required|date_format:H:i'
-            ]);
-            if(!$validatedData){
-                return redirect()->back()->with('errors','Preencha os campos corretamente!');
-            }
-            $arrayData =[
-                'user_id' => $userId,
-                'date' => $request->date,
-                'time' => $request->time
-            ];
-            $agendamento->update($arrayData);
-            return redirect()->route('dashboard')->with('success','Agendamento atualizado com sucesso');
+        $agendamento = Agendamento::find($id);
+        
+        if(!$agendamento){
+            return redirect()->back()->with('errors','Não foi encontrado nenhum agendamento!');
+        }
+        
+        $userId = Auth::id();
+        
+        $request->validate([
+            'date' => 'required|date',
+            'time' => 'required|date_format:H:i'
+        ], [
+            'date.required' => 'O campo data é obrigatório.',
+            'date.date' => 'O campo data deve ser uma data válida.',
+            'time.required' => 'O campo hora é obrigatório.',
+            'time.date_format' => 'O campo hora deve estar no formato H:i.'
+        ]);
     
+        $arrayData = [
+            'user_id' => $userId,
+            'date' => $request->date,
+            'time' => $request->time
+        ];
+    
+        $agendamento->update($arrayData);
+    
+        return redirect()->route('dashboard')->with('success','Agendamento atualizado com sucesso');
     }
+    
     public function delete($id) {
         $agendamento = Agendamento::find($id);
         if(!$agendamento) {
