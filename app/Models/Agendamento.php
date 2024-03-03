@@ -8,7 +8,7 @@ use App\Models\User;
 class Agendamento extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id','date','time'];
+    protected $fillable = ['user_id','name','date','time'];
     public function user()
     {
         return $this->belongsTo(User::class);

@@ -50,7 +50,7 @@ class AgendamentoController extends Controller
 
         Agendamento::create([
             'user_id' => $userId,
-            'user_name' => $user->name,
+            'name' => $user->name,
             'date' => $request->date,
             'time' => $request->time
         ]);
@@ -69,6 +69,12 @@ class AgendamentoController extends Controller
         }
         
         $userId = Auth::id();
+        $user = User::find($userId);
+        
+        if(!$user){
+            // Aqui você pode querer registrar o evento de erro em um log, por exemplo
+            return redirect()->back()->with('errors','Usuário não encontrado.');
+        }
         
         $request->validate([
             'date' => 'required|date',
@@ -82,10 +88,10 @@ class AgendamentoController extends Controller
     
         $arrayData = [
             'user_id' => $userId,
+            'name' => $user->name,
             'date' => $request->date,
             'time' => $request->time
         ];
-    
         $agendamento->update($arrayData);
     
         return redirect()->route('dashboard')->with('success','Agendamento atualizado com sucesso');

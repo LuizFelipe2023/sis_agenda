@@ -127,7 +127,12 @@ class AuthController extends Controller
         );
 
         return $status === Password::PASSWORD_RESET
-                ? redirect()->route('login')->with('status', __($status))
-                : back()->withErrors(['email' => [__($status)]]);
+            ? redirect()->route('login')->with('status', __($status))
+            : back()->withErrors(['email' => [__($status)]]);
+    }
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('profile', compact('user'));
     }
 }
