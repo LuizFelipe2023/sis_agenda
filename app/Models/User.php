@@ -2,13 +2,15 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Agendamento;
-class User extends Authenticatable
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
+class User extends Authenticatable implements CanResetPasswordContract, MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -22,7 +24,7 @@ class User extends Authenticatable
         'phone',
         'email',
         'password',
-        'role'
+        'role',
     ];
 
     /**
@@ -43,9 +45,10 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'secret_question' => 'string', // Cast para o tipo de dado da pergunta secreta
     ];
 
     public function agendamentos(){
-           return  $this->hasMany(Agendamento::class);
+           return $this->hasMany(Agendamento::class);
     }
 }

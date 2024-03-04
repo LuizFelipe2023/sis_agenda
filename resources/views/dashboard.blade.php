@@ -15,7 +15,7 @@
             <span class="navbar-brand mb-0 h1 text-center">Agendamentos</span>
             <div class="d-flex">
                 <a href="{{ route('create') }}" class="btn btn-primary me-2">Novo Agendamento</a>
-                <a href='#' class="btn btn-success me-2">Ver Perfil</a>
+                <a href="{{route('profile') }}" class="btn btn-success me-2">Ver Perfil</a>
                 <form action="{{ route('logout') }}" method="post">
                     @csrf
                     <button type="submit" class="btn btn-danger">Logout</button>

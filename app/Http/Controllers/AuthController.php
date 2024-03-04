@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
 use App\Models\User;
 
@@ -41,13 +42,17 @@ class AuthController extends Controller
             'role.in' => 'O campo papel deve ser "admin" ou "user".',
         ]);
 
+
         User::create([
             'name' => $request->name,
             'phone' => $request->phone,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role
+            'role' => $request->role,
+            'secret_question' => $request->secret_question,
+            'secret_answer' => $request->secret_answer,
         ]);
+
 
         return redirect()->to('login')->withSuccess('Usuário criado com sucesso');
     }
@@ -81,31 +86,31 @@ class AuthController extends Controller
 
         return redirect('login');
     }
-
-    public function forgot()
+    
+    public function forgotPasswordForm()
     {
-        return view('forgot');
+        return view('forgot-password');
     }
 
-    public function forgot_password(Request $request)
+    public function forgotPassword(Request $request)
     {
-        $request->validate([
-            'email' => 'required|email'
-        ]);
+        $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink($request->only('email'));
+        $status = Password::sendResetLink(
+            $request->only('email')
+        );
 
         return $status === Password::RESET_LINK_SENT
-            ? back()->with(['status' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
+            ? back()->with(['status' => trans($status)])
+            : back()->withErrors(['email' => trans($status)]);
     }
 
-    public function reset()
+    public function resetPasswordForm($token)
     {
-        return view('reset');
+        return view('reset-password', ['token' => $token]);
     }
 
-    public function reset_password(Request $request)
+    public function resetPassword(Request $request)
     {
         $request->validate([
             'token' => 'required',
@@ -115,19 +120,20 @@ class AuthController extends Controller
 
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
-            function (User $user, string $password) {
-                $user->forceFill([
-                    'password' => Hash::make($password)
-                ])->setRememberToken(Str::random(60));
-
+            function ($user, $password) {
+                $user->password = bcrypt($password);
                 $user->save();
-
-                event(new PasswordReset($user));
             }
         );
 
-        return $status === Password::PASSWORD_RESET
-                ? redirect()->route('login')->with('status', __($status))
-                : back()->withErrors(['email' => [__($status)]]);
+        return $status == Password::PASSWORD_RESET
+            ? redirect()->route('login')->with('status', trans($status))
+            : back()->withErrors(['email' => [trans($status)]]);
     }
+    public function profile()
+    {
+        $user = Auth::user();
+        return view('profile', compact('user'));
+    }
+    
 }

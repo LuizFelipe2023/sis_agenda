@@ -28,7 +28,7 @@
                                 </ul>
                             </div>
                         @endif
-                        <form action="{{ route('login_submit') }}" method="POST">
+                        <form action="{{ route('login-submit') }}" method="POST">
                             @csrf
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email:</label>
@@ -41,7 +41,7 @@
                             <button type="submit" class="btn btn-primary btn-block">Entrar</button>
                         </form>
                         <hr>
-                        <p class="text-center">Esqueceu sua senha? <a href="{{ route('forgot') }}">Redefinir senha</a></p>
+                        <p class="text-center">Esqueceu sua senha? <a href="{{ route('password.request') }}">Redefinir senha</a></p>
                         <p class="text-center">Ainda não tem uma conta? <a href="{{ route('home') }}">Cadastre-se aqui</a></p>
                     </div>
                 </div>

@@ -14,17 +14,29 @@
             <span class="navbar-brand mb-0 h1 text-center">Editar Agendamento</span>
         </div>
     </header>
-
+    @if ($errors->any())
+    <div class="alert alert-danger mt-4">
+        <ul>
+            @foreach ($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+    @endif
     <div class="container mt-4">
         <form id="edit-form" action="{{ route('edit-submit', $agendamento->id) }}" method="POST">
             @csrf
+            <input type="hidden" name="user_id" value="{{ Auth::id() }}">
+            <input type="hidden" name="name" value="{{ Auth::user()->name }}">
             <div class="mb-3">
                 <label for="date" class="form-label">Nova Data:</label>
                 <input type="date" class="form-control" id="date" name="date" required placeholder="YYYY-MM-DD">
+                <div class="invalid-feedback">Por favor, insira uma data válida.</div>
             </div>
             <div class="mb-3">
                 <label for="time" class="form-label">Novo Hora:</label>
                 <input type="time" class="form-control" id="time" name="time" required placeholder="HH:MM">
+                <div class="invalid-feedback">Por favor, insira uma hora válida.</div>
             </div>
             <button type="submit" class="btn btn-primary">Atualizar Agendamento</button>
         </form>

@@ -8,30 +8,42 @@
     <title>Home</title>
 </head>
 <body>
-<div class="container py-5">
+    <div class="container py-5">
         <div class="row justify-content-center">
             <div class="col-lg-6">
                 <div class="card">
                     <div class="card-body">
                         <h1 class="text-center mb-4">Bem-vindo à nossa aplicação!</h1>
                         <p class="text-center mb-4">Faça parte da nossa comunidade, cadastre-se agora:</p>
-                        <form action="{{ route('register_submit') }}" method="POST">
+                        <form action="{{ route('register-submit') }}" method="POST">
                             @csrf
                             <div class="mb-3">
                                 <label for="name" class="form-label">Nome:</label>
                                 <input type="text" class="form-control" id="name" name="name" required>
+                                @error('name')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Telefone:</label>
                                 <input type="text" class="form-control" id="phone" name="phone" required>
+                                @error('phone')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email:</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
+                                @error('email')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">Senha:</label>
                                 <input type="password" class="form-control" id="password" name="password" required>
+                                @error('password')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="role" class="form-label">Papel:</label>
@@ -39,8 +51,11 @@
                                     <option value="admin">Admin</option>
                                     <option value="user">Usuário</option>
                                 </select>
+                                @error('role')
+                                    <div class="text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
-                            <button type="submit" class="btn btn-primary btn-block">Cadastrar</button>
+                            <button type="submit" class="btn btn-primary">Registrar</button>
                         </form>
                         <hr>
                         <p class="text-center">Já tem uma conta? <a href="{{ route('login') }}">Faça login aqui</a></p>
@@ -50,6 +65,5 @@
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
 </body>
 </html>
