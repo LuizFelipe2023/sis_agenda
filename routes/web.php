@@ -20,9 +20,19 @@ Route::get('/', function () {
 
 Route::get('/', [AuthController::class, 'home'])->name('home');
 Route::get('/login', [AuthController::class, 'login'])->name('login');
+<<<<<<< HEAD
 Route::post('/login-submit', [AuthController::class, 'login_submit'])->name('login-submit');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::post('/register-submit', [AuthController::class, 'register_submit'])->name('register-submit');
+=======
+Route::post('/login-submit', [AuthController::class, 'login_submit'])->name('login_submit');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+Route::post('/register-submit', [AuthController::class, 'register_submit'])->name('register_submit');
+Route::get('/forgot', [AuthController::class, 'forgot'])->name('forgot');
+Route::post('/forgot-password', [AuthController::class, 'forgot_password'])->name('forgot-password');
+Route::get('/reset',[AuthController::class,'reset'])->name('reset');
+Route::post('/reset-password', [AuthController::class, 'reset_password'])->name('reset-password');
+>>>>>>> 0c7d9e4617cda4d72d5bbaa556a198920ce909d6
 
 Route::get('/forgot-password', [AuthController::class, 'forgotPasswordForm'])->name('password.request');
 Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.email');

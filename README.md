@@ -10,7 +10,6 @@ Este é um sistema de agendamento para agendar compromissos. Ele permite aos usu
 - **Exclusão de Agendamentos:** Os usuários podem excluir agendamentos que não são mais necessários.
 - **Autenticação de Usuários:** Os usuários podem fazer login e logout da aplicação.
 - **Cadastro de Usuários:** Os novos usuários podem se cadastrar na aplicação.
-- **Reset de Senha:** Os usuários podem redefinir sua senha se a esquecerem.
 
 ## Tecnologias Utilizadas
 
